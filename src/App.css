@@ -36,3 +36,62 @@
     transform: rotate(360deg);
   }
 }
+
+#board{
+  position:relative;
+}
+
+.intersection {
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.intersection:before {
+  border-top: 2px #000 solid;
+  width: 30px;
+  display: block;
+  content: "";
+  top: 13px;
+  position: absolute;
+  z-index: -1;
+}
+
+.intersection:after {
+  border-left: 2px #000 solid;
+  height: 30px;
+  display: block;
+  content: "";
+  left: 13px;
+  top: 0px;
+  position: absolute;
+  z-index: -1;
+}
+
+.black {
+  border: 1px solid #000;
+  background-color: #000;
+}
+
+.white {
+  border: 1px solid #000;
+  background-color: #fff;
+}
+
+.sidebar {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 160px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #55618f; /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px;
+}
+.page-content {
+  margin-left: 160px; /* Same as the width of the sidebar */
+  padding: 0px 10px;
+}

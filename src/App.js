@@ -1,24 +1,33 @@
-import logo from './logo.svg';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Layout from "./pages/Layout";
+import LocalGo from "./pages/LocalGo";
+import Puzzle from "./pages/Puzzle";
+import Gomoku from "./pages/Gomoku";
 import './App.css';
+import {Col, Row} from "react-bootstrap";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <>
+          <Row>
+          <BrowserRouter>
+                  <Col xs={2} className="col-md-12 d-none d-md-block bg-light sidebar">
+                      <h2>The Game of GO</h2>
+                      <Layout />
+                  </Col>
+                  <Col xs={10} className="page-content">
+                          <Routes>
+                              <Route index element={<Home />} />
+                              <Route path="go" element={<LocalGo />} />
+                              <Route path="puzzle" element={<Puzzle />} />
+                              <Route path="gomoku" element={<Gomoku />} />
+                          </Routes>
+                  </Col>
+
+          </BrowserRouter>
+          </Row>
+      </>
   );
 }
 
