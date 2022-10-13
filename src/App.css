@@ -70,6 +70,10 @@
   z-index: -1;
 }
 
+.intersection:hover{
+  background-color: #cecccc;
+}
+
 .black {
   border: 1px solid #000;
   background-color: #000;
@@ -78,6 +82,18 @@
 .white {
   border: 1px solid #000;
   background-color: #fff;
+}
+
+.hover-black {
+  border: 1px solid #000;
+  background-color: #000;
+  opacity: 0.5;
+}
+
+.white-hover {
+  border: 1px solid #000;
+  background-color: #fff;
+  opacity: 0.5;
 }
 
 .sidebar {

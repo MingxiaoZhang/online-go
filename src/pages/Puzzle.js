@@ -4,7 +4,7 @@ const Puzzle = () => {
     return (
         <div>
             <h1>Puzzle</h1>
-            <GoBoard dim={19}/>
+            <h2>Still in construction</h2>
         </div>
     );
 };

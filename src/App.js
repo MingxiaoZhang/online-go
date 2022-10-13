@@ -13,7 +13,7 @@ function App() {
           <Row>
           <BrowserRouter>
                   <Col xs={2} className="col-md-12 d-none d-md-block bg-light sidebar">
-                      <h2>The Game of GO</h2>
+                      <h2>GO & <br/> GOMOKU</h2>
                       <Layout />
                   </Col>
                   <Col xs={10} className="page-content">

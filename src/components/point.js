@@ -15,6 +15,15 @@ const Point = (props) => {
         classes += props.color
     }
 
+    const hover = () => {
+        classes += props.color + '-hover'
+    }
+
+    const endHover = () => {
+        classes = "intersection "
+    }
+
+
     const move = () => {
         if (props.game.update(props.row, props.col)) {
             props.game.switchPlayer()
@@ -22,7 +31,7 @@ const Point = (props) => {
     }
 
     return (
-        <div className={classes} style={style} onClick={move}/>
+        <div className={classes} style={style} onClick={move} onMouseOver={hover} onMouseLeave={endHover}/>
     );
 };
 

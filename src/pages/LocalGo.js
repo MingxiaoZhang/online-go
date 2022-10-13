@@ -19,6 +19,7 @@ const LocalGo = () => {
     return (
         <div>
             <h1>GO</h1>
+            <h2>Still in construction</h2>
             <GoBoard game={go} ref={board}/>
             <button onClick={newGame}>New</button>
         </div>
