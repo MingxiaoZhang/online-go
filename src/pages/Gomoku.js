@@ -3,18 +3,19 @@ import {GomokuGame} from "../models/gomokuGame";
 import React, {useState, useRef, useEffect} from "react";
 
 const Gomoku = () => {
-    let go = new GomokuGame(13)
-    const [game, setGame] = useState(go)
+    let gomoku = new GomokuGame(13)
+    const [game, setGame] = useState(gomoku)
     const board = useRef()
     const newGame = () => {
         let player1 = document.getElementById('player-black').selectedIndex
         let player2 = document.getElementById('player-white').selectedIndex
-        go.players['black'] = (player1 === 1)
-        go.players['white'] = (player2 === 1)
-        go.setObserver(updateBoard)
-        go.start = true
-        go.clear()
-        setGame(go)
+        gomoku.players['black'] = (player1 === 1)
+        gomoku.players['white'] = (player2 === 1)
+        gomoku.setBoardUpdate(updateBoard)
+        gomoku.setPointUpdate(updatePoint)
+        gomoku.start = true
+        gomoku.clear()
+        setGame(gomoku)
         updateBoard()
     }
 
@@ -23,6 +24,9 @@ const Gomoku = () => {
     }
     const back = () => {
         board.current.back()
+    }
+    const updatePoint = (row, col) => {
+        board.current.updatePoint(row, col)
     }
 
     useEffect(() => {

@@ -8,19 +8,15 @@ export const states = {
 
 export class GomokuGame extends Game{
     update(row, col) {
-        if (!this.start || !(this.board[row][col] === states.EMPTY)) return false
-        this.board[row][col] = this.player
+        if (!this.start || !(this.board[row][col].state === states.EMPTY)) return false
+        this.board[row][col].state = this.player
         this.moves.push([this.player, row, col])
         if (this.checkWin(row, col)) {
             this.start = false
-            alert(this.player)
+            alert("Player " + this.player + " wins!")
         }
-        this.updateBoard()
+        this.updatePoint(row, col)
         return true
-    }
-
-    setObserver(func) {
-        this.updateBoard = func
     }
 
     clear() {
@@ -45,7 +41,7 @@ export class GomokuGame extends Game{
 
     back() {
         const temp = this.moves.pop()
-        this.board[temp[1]][temp[2]] = states.EMPTY
+        this.board[temp[1]][temp[2]].state = states.EMPTY
         this.player = temp[0]
     }
 
@@ -72,13 +68,13 @@ export class GomokuGame extends Game{
     }
 
     checkWin(row, col) {
-        const state = this.board[row][col]
+        const state = this.board[row][col].state
         let i = 0
         let j = 0
-        while (this.inRange(row + i + 1) && this.board[row + i + 1][col] === state) {
+        while (this.inRange(row + i + 1) && this.board[row + i + 1][col].state === state) {
             i++
         }
-        while (this.inRange(row - j - 1) && this.board[row - j - 1][col] === state) {
+        while (this.inRange(row - j - 1) && this.board[row - j - 1][col].state === state) {
             j++
         }
         if (i + j >= 4) {
@@ -86,10 +82,10 @@ export class GomokuGame extends Game{
         }
         i = 0
         j = 0
-        while (this.inRange(col + i + 1) && this.board[row][col + i+ 1] === state) {
+        while (this.inRange(col + i + 1) && this.board[row][col + i+ 1].state === state) {
             i++
         }
-        while (this.inRange(col - j - 1) && this.board[row][col - j - 1] === state) {
+        while (this.inRange(col - j - 1) && this.board[row][col - j - 1].state === state) {
             j++
         }
         if (i + j >= 4) {
@@ -97,10 +93,14 @@ export class GomokuGame extends Game{
         }
         i = 0
         j = 0
-        while (this.inRange(row + i + 1) && this.inRange(col + i + 1) && this.board[row + i + 1][col + i + 1] === state) {
+        while (this.inRange(row + i + 1)
+        && this.inRange(col + i + 1)
+        && this.board[row + i + 1][col + i + 1].state === state) {
             i++
         }
-        while (this.inRange(row - j - 1) && this.inRange(col - j - 1) && this.board[row - j - 1][col - j - 1] === state) {
+        while (this.inRange(row - j - 1)
+        && this.inRange(col - j - 1)
+        && this.board[row - j - 1][col - j - 1].state === state) {
             j++
         }
         if (i + j >= 4) {
@@ -108,10 +108,14 @@ export class GomokuGame extends Game{
         }
         i = 0
         j = 0
-        while (this.inRange(row + i + 1) && this.inRange(col - i - 1) && this.board[row + i + 1][col - i - 1] === state) {
+        while (this.inRange(row + i + 1)
+        && this.inRange(col - i - 1)
+        && this.board[row + i + 1][col - i - 1].state === state) {
             i++
         }
-        while (this.inRange(row - j - 1) && this.inRange(col + j + 1) && this.board[row - j - 1][col + j + 1] === state) {
+        while (this.inRange(row - j - 1)
+        && this.inRange(col + j + 1)
+        && this.board[row - j - 1][col + j + 1].state === state) {
             j++
         }
         if (i + j >= 4) {

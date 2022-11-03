@@ -3,7 +3,7 @@ import {GoBoard, SIZE} from "./goboard";
 import {states } from "../models/go"
 
 const Point = (props) => {
-    let classes = "intersection "
+    const [classes, setClasses] = useState("intersection " + props.color)
     var style = {
         top: props.row * SIZE,
         left: props.col * SIZE,
@@ -11,16 +11,24 @@ const Point = (props) => {
         height: SIZE,
     };
 
-    if (props.color !== states.EMPTY) {
-        classes += props.color
-    }
+    useEffect(() => {
+        if (props.color !== states.EMPTY) {
+            setClasses("intersection " + props.color)
+        } else {
+            setClasses("intersection ")
+        }
+    }, [props]);
 
     const hover = () => {
-        classes += props.color + '-hover'
+        if (classes === "intersection ") {
+            setClasses("intersection " + props.game.player + "-hover")
+        }
     }
 
     const endHover = () => {
-        classes = "intersection "
+        if (classes === "intersection " + props.game.player + "-hover") {
+            setClasses("intersection ")
+        }
     }
 
 

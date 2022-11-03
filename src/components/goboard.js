@@ -14,15 +14,23 @@ const GoBoard = forwardRef((props, ref) => {
         for (let i = 0; i < props.game.dim; i++) {
             for (let j = 0; j < props.game.dim; j++) {
                 intersections.push(<Point
-                    color={props.game.board[i][j]}
+                    color={props.game.board[i][j].state}
                     row={i}
                     col={j}
                     game={props.game}
-                    update={rerender}
                 />);
             }
         }
         setBoard(intersections)
+    }
+
+    const updatePoint = (row, col) => {
+        intersections[row * props.game.dim + col] = <Point
+            color={props.game.board[row][col].state}
+            row={row}
+            col={col}
+            game={props.game}
+        />
     }
 
     useImperativeHandle(ref, () => ({
@@ -32,6 +40,9 @@ const GoBoard = forwardRef((props, ref) => {
         back() {
             props.game.back()
             rerender()
+        },
+        updatePoint(row, col) {
+            updatePoint(row, col)
         }
     }));
 

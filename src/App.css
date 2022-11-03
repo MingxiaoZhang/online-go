@@ -39,6 +39,7 @@
 
 #board{
   position:relative;
+  padding: 20px;
 }
 
 .intersection {
@@ -70,10 +71,6 @@
   z-index: -1;
 }
 
-.intersection:hover{
-  background-color: #cecccc;
-}
-
 .black {
   border: 1px solid #000;
   background-color: #000;
@@ -84,15 +81,15 @@
   background-color: #fff;
 }
 
-.hover-black {
+.black-hover {
   border: 1px solid #000;
-  background-color: #000;
+  background-color: #807f7f;
   opacity: 0.5;
 }
 
 .white-hover {
   border: 1px solid #000;
-  background-color: #fff;
+  background-color: #dce8e7;
   opacity: 0.5;
 }
 
