@@ -15,6 +15,11 @@ import Sidebar from './components/Sidebar';
 import RoomList from './pages/RoomList';
 import { sidebarItems } from './components/Sidebar/sidebarItems';
 import { menuItems } from './pages/Menu/menuItems';
+import LoginPage from './pages/Login';
+import RegisterPage from './pages/Register';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Profile from './pages/User';
 
 const App = () => {
   return (
@@ -23,13 +28,20 @@ const App = () => {
         <div className="flex h-full">
           <Sidebar sidebarItems={sidebarItems}/>
           <div className="flex-1 p-4">
-            <Routes>
-              <Route path="/local" element={<LocalGamePage />} />
-              <Route path="/multi" element={<MultiGamePage />} />
-              <Route path="/rooms" element={<RoomList />} />
-              <Route path="/rules" element={<RulesPage />} />
-              <Route path="/" element={<Menu menuItems={menuItems} />} />
-            </Routes>
+            <AuthProvider>
+              <Routes>
+                <Route path="/local" element={<LocalGamePage />} />
+                <Route path="/multi" element={<MultiGamePage />} />
+                <Route path="/rooms" element={<RoomList />} />
+                <Route path="/rules" element={<RulesPage />} />
+                <Route path='/login' element={<LoginPage />} />
+                <Route path='/register' element={<RegisterPage />} />
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/user" element={<Profile />} />
+                </Route>
+                <Route path="/" element={<Menu menuItems={menuItems} />} />
+              </Routes>
+            </AuthProvider>
           </div>
         </div>
       </Router>

@@ -4,15 +4,16 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
-const JWT_SECRET = 'your_secret_key'; // You should use an environment variable for this
+const JWT_SECRET = process.env.JWT_SECRET || '';
 
 export const register = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { username, email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     const user = await prisma.user.create({
       data: {
+        username,
         email,
         password: hashedPassword,
         elo: 0
