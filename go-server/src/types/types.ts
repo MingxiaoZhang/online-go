@@ -1,4 +1,4 @@
-import { BoardSize, Piece, TimeControl } from "./enum";
+import { BoardSize, Piece, TimeControl } from "../enum";
 
 export type PlayerData = {
     id: string;

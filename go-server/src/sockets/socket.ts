@@ -1,6 +1,6 @@
 // src/socketManager.ts
 import { Server, Socket } from 'socket.io';
-import { PlayerData, RoomData } from '../types';
+import { PlayerData, RoomData } from '../types/types';
 import { BoardSize, Piece } from '../enum';
 import { playMove } from '../utils/gameUtils';
 
