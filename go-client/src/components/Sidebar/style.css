@@ -1,0 +1,7 @@
+@tailwind base; 
+@tailwind components; 
+@tailwind utilities; 
+
+.side-item {
+    @apply w-fit mt-4 mb-4 select-none
+}

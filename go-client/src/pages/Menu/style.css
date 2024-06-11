@@ -1,0 +1,12 @@
+@tailwind base; 
+@tailwind components; 
+@tailwind utilities; 
+
+.select {
+    @apply flex-1 h-full p-5
+}
+
+.select-button {
+    @apply w-full h-full bg-[#352F44] border-2 border-[#FAF0E6]
+}
+
