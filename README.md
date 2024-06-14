@@ -23,10 +23,12 @@ This project is a full-stack application for playing the game of Go that include
 
    ```bash
    git clone https://github.com/yourusername/your-repo.git
-   cd your-repo/backend
+   ```
 
 2. Go to backend directory:
-    ```cd go-server```
+    ```
+    cd go-server
+    ```
 
 3. Setup backend environment configuration:
     ```
