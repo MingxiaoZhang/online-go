@@ -1,4 +1,5 @@
 import { BoardSize, Piece, TimeControl } from "../enum";
+import { Request } from 'express'
 
 export type PlayerData = {
     id: string;
@@ -18,4 +19,8 @@ export type RoomData = {
     timeControl: keyof typeof TimeControl;
     players: {[key in Piece]: Player}
     isStarted: boolean;
+}
+
+export interface AuthRequest extends Request {
+    userId?: number;
 }
