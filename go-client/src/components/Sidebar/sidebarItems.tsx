@@ -8,12 +8,12 @@ export const sidebarItems = [
     },
     {
       option: 'Play Local',
-      link: '/local',
+      link: '/game/local',
       icon: <FaHouseUser />
     },
     {
       option: 'Play Online',
-      link: '/multi',
+      link: '/rooms',
       icon: <FaGlobe />
     },
     {

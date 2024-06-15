@@ -5,11 +5,11 @@ export const menuItems = [
     },
     {
         option: 'Local',
-        link: '/local'
+        link: '/game/local'
     },
     {
         option: 'Online',
-        link: '/multi'
+        link: '/rooms'
     },
     {
         option: 'Puzzles',

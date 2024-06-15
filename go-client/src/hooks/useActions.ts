@@ -14,22 +14,17 @@ import {
 } from '../redux/slices/onlineGameSlice';
 import { LocalGameState } from '../redux/slices/localGameSlice';
 
-
-const isOnlineGameState = (state: LocalGameState | OnlineGameState): state is OnlineGameState => {
-    return (state as OnlineGameState).playerColor !== undefined;
-}
-
 const useActions = (gameMode: GameMode) => {
     const dispatch = useDispatch();
     const { gameState } = useGameState();
 
     const placePiece = useCallback(
         ({ row, col }: {row: number, col: number}) => {
-            if (!isOnlineGameState(gameState)) {
+            if (gameMode !== GameMode.ONLINE) {
                 dispatch(localPlacePiece({row, col}));
                 return
             } 
-            if (gameState.currentPlayer !== gameState.playerColor) {
+            if (gameState.currentPlayer !== (gameState as OnlineGameState).playerColor) {
                 return
             }
             dispatch({
@@ -38,7 +33,7 @@ const useActions = (gameMode: GameMode) => {
                     playerName: gameState.playerName,
                     row,
                     col,
-                    playerColor: String(gameState.playerColor)
+                    playerColor: String((gameState as OnlineGameState).playerColor)
                 }
             });
         },

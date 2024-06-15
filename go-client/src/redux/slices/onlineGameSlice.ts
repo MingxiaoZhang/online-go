@@ -14,7 +14,7 @@ export type OnlineGameState = {
   timeControl: keyof typeof TimeControl;
   currentPlayer: Piece;
   players: {[key in Piece]: Player};
-  isStarted: boolean;
+  isGameStarted: boolean;
   isCreated: boolean;
 }
 
@@ -41,7 +41,7 @@ const initialState: OnlineGameState = {
       id: ''
     },
   },
-  isStarted: false,
+  isGameStarted: false,
   isCreated: false
 };
 
@@ -53,7 +53,7 @@ const onlineGameSlice = createSlice({
       state.isCreated = action.payload;
     },
     startGame: (state, action?) => {
-      state.isStarted = true;
+      state.isGameStarted = true;
       if (action?.payload) {
         state.roomName = action.payload.roomName;
         state.boardSize = action.payload.boardSize;

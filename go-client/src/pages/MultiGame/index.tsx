@@ -4,19 +4,19 @@ import GoBoard from '../../components/GoBoard';
 import { BoardSize, Piece, PlayerType, SocketAction, TimeControl } from '../../enum';
 import { useDispatch, useSelector } from 'react-redux';
 import { startGame } from '../../redux/slices/localGameSlice';
-import { resetBoard, setBoardSize, setIsCreated, setPlayerColor, setPlayers, setRoomName, setTimeControl } from '../../redux/slices/onlineGameSlice';
+import { OnlineGameState, resetBoard, setBoardSize, setIsCreated, setPlayerColor, setPlayers, setRoomName, setTimeControl } from '../../redux/slices/onlineGameSlice';
 import PlayerPanel from '../../components/PlayerPanel';
 import { useLocation } from 'react-router-dom';
+import useGameState from '../../hooks/useGameState';
 
 const MultiGamePage = () => {
     const location = useLocation();
     const dispatch = useDispatch();
-    const isGameStarted = useSelector((state: any) => state.game.isGameStarted);
-    const players = useSelector((state: any) => state.board.players);
-    const { isStarted, isCreated, playerId, playerName, roomName, boardSize, timeControl } = useSelector((state: any) => state.board);
+    const { gameState, gameMode } = useGameState();
+    const { isGameStarted, isCreated, players, playerId, playerName, roomName, boardSize, timeControl } = gameState as OnlineGameState
 
     useEffect(() => {
-      if (isCreated && !isStarted) {
+      if (isCreated && !isGameStarted) {
         dispatch({
           type: SocketAction.EDIT_ROOM,
           payload: {
@@ -46,7 +46,7 @@ const MultiGamePage = () => {
     <div className="flex flex-row">
       <GoBoard />
       <div className="flex-1">
-        {!isStarted &&
+        {!isGameStarted &&
           <>
           <input value={roomName}
               onChange={(e) =>
@@ -102,14 +102,14 @@ const MultiGamePage = () => {
             <div className='flex-1' onClick={() => {
               if (players[Piece.WHITE].id !== playerId) {
                 dispatch(setPlayerColor(Piece.WHITE));
-              dispatch(setPlayers({
-                [Piece.WHITE]: {
-                  name: playerName,
-                  id: playerId
-                },
-                [Piece.BLACK]: players[Piece.WHITE],
-                [Piece.NONE]: players[Piece.NONE]
-               }));
+                dispatch(setPlayers({
+                  [Piece.WHITE]: {
+                    name: playerName,
+                    id: playerId
+                  },
+                  [Piece.BLACK]: players[Piece.WHITE],
+                  [Piece.NONE]: players[Piece.NONE]
+                }));
             }}}>
             <PlayerPanel
               color={Piece.WHITE}

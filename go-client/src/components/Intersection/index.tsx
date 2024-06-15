@@ -16,7 +16,7 @@ interface IntersectionProps {
 
 const Intersection: React.FC<IntersectionProps> = ({ size, row, col, piece }) => {
   const dispatch = useDispatch();
-  const { gameMode } = useParams<{ gameMode: GameMode }>();
+  const { gameMode } = useGameState();
   const { placePiece } = useActions(gameMode || GameMode.LOCAL);
   // const gameState = useGameState(gameMode || GameMode.LOCAL);
 

@@ -1,0 +1,1 @@
+export const CONNECTED_IP_KEY = 'connectedIPs';

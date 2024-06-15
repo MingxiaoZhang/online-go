@@ -3,6 +3,8 @@ import { Server, Socket } from 'socket.io';
 import { PlayerData, RoomData } from '../types/types';
 import { BoardSize, Piece } from '../enum';
 import { playMove } from '../utils/gameUtils';
+import { socketMiddleware } from '../middleware/authMiddleware';
+import { RedisClientConnection } from '../redis/types';
 
 const playerData: {[name: string]: PlayerData} = {};
 
@@ -12,7 +14,9 @@ const gameData: {[roomId: string]: Piece[][]} = {};
 
 let roomNumber = 0;
 
-export const initializeSocket = (io: Server) => {
+export const initializeSocket = (redisClient: RedisClientConnection, io: Server) => {
+  io.use(socketMiddleware(redisClient));
+  
   io.on('connection', (socket: Socket) => {
     console.log('A user connected:', socket.id);
     socket.on('initPlayer', (player) => {

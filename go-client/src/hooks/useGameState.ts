@@ -1,10 +1,13 @@
 import { useSelector } from 'react-redux';
 import { IRootState } from '../redux/store';
 import { GameMode } from '../enum';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
+import { getGameMode } from '../util/stringUtil';
 
 const useGameState = () => {
-    const { gameMode } = useParams<{ gameMode: GameMode }>();
+    const location = useLocation();
+    const gameMode = getGameMode(location);
+
     if (gameMode !== GameMode.ONLINE) {
         return {gameState: useSelector((state: IRootState) => state.localGame), gameMode};
     } else {

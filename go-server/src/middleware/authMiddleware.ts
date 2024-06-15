@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 import { AuthRequest } from '../types/types';
+import { Socket } from 'socket.io';
+import { RedisClientConnection } from '../redis/types';
+import { CONNECTED_IP_KEY } from '../const';
 
 const JWT_SECRET = process.env.JWT_SECRET || '';
 
@@ -23,4 +26,26 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   } catch (error) {
     res.status(401).json({ error: 'Invalid token' });
   }
+};
+
+export const socketMiddleware = (redisClient: RedisClientConnection) => async (socket: Socket, next: (err?: Error) => void) => {
+  const token = socket.handshake.auth.token;
+  const ip = socket.handshake.address;
+
+  const isConnected = await redisClient.sIsMember(CONNECTED_IP_KEY, ip);
+  if (isConnected) {
+    return next(new Error('Connection from this IP address is already established'));
+  }
+  if (token) {
+    try {
+      const payload = jwt.verify(token, JWT_SECRET) as { userId: string };
+      socket.data.userId = payload.userId;
+    } catch (error) {
+      return next(new Error('Invalid token'));
+    }
+  } else {
+    // Generate a temporary user ID based on IP address
+    socket.data.userId = `temp-${ip}`;
+  }
+  next();
 };

@@ -30,8 +30,8 @@ const App = () => {
           <div className="flex-1 p-4">
             <AuthProvider>
               <Routes>
-                <Route path="/local" element={<LocalGamePage />} />
-                <Route path="/multi" element={<MultiGamePage />} />
+                <Route path="/game/local" element={<LocalGamePage />} />
+                <Route path="/game/online" element={<MultiGamePage />} />
                 <Route path="/rooms" element={<RoomList />} />
                 <Route path="/rules" element={<RulesPage />} />
                 <Route path='/login' element={<LoginPage />} />

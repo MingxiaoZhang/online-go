@@ -1,6 +1,7 @@
     // src/context/AuthContext.tsx
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DEFAULT_USER } from '../../const';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -17,7 +18,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-        setIsAuthenticated(true);
+            setIsAuthenticated(true);
         }
     }, []);
 
