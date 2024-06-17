@@ -14,8 +14,8 @@ const gameData: {[roomId: string]: Piece[][]} = {};
 
 let roomNumber = 0;
 
-export const initializeSocket = (redisClient: RedisClientConnection, io: Server) => {
-  io.use(socketMiddleware(redisClient));
+export const initializeSocket = (io: Server) => {
+  io.use(socketMiddleware);
   
   io.on('connection', (socket: Socket) => {
     console.log('A user connected:', socket.id);

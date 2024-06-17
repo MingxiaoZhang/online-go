@@ -6,31 +6,39 @@ import { useDispatch, useSelector } from 'react-redux';
 import { startGame } from '../../redux/slices/localGameSlice';
 import { OnlineGameState, resetBoard, setBoardSize, setIsCreated, setPlayerColor, setPlayers, setRoomName, setTimeControl } from '../../redux/slices/onlineGameSlice';
 import PlayerPanel from '../../components/PlayerPanel';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useGameState from '../../hooks/useGameState';
+import axios from 'axios';
 
 const MultiGamePage = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
     const { gameState, gameMode } = useGameState();
     const { isGameStarted, isCreated, players, playerId, playerName, roomName, boardSize, timeControl } = gameState as OnlineGameState
 
     useEffect(() => {
+      const handleEditRoom = async () => {
+        const settings = {
+          id,
+          roomName,
+          boardSize,
+          timeControl,
+          players,
+          playerName
+        };
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/rooms/edit`, settings);
+        if (response.status !== 200) {
+          console.error('Error editing room', response.data.message);
+        }
+      }
       if (isCreated && !isGameStarted) {
-        dispatch({
-          type: SocketAction.EDIT_ROOM,
-          payload: {
-            roomName,
-            boardSize,
-            timeControl,
-            players,
-            playerName
-          }
-        });
+        handleEditRoom();  
       }
   }, [dispatch, roomName, boardSize, timeControl, players]);
 
-    const handleCreateRoom = () => {
+    const handleCreateRoom = async () => {
       const settings = {
         playerName,
         roomName,
@@ -38,8 +46,13 @@ const MultiGamePage = () => {
         timeControl,
         players
       };
-      dispatch({ type: SocketAction.CREATE_ROOM, payload: settings });
-      dispatch(setIsCreated(true));
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/rooms/create`, settings);
+      if (response.status === 200) {
+        dispatch(setIsCreated(true));
+        navigate(`${location.pathname}/${response.data.roomId}`, { replace: true });
+      } else {
+        console.error('Error creating room', response.data.message);
+      }
     }
 
   return (

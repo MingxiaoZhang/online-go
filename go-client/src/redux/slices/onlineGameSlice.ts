@@ -5,7 +5,7 @@ import { playMove } from '../../util/gameUtil';
 import { Player } from '../../types';
 
 export type OnlineGameState = {
-  playerId: string;
+  playerId?: number;
   playerName: string;
   roomName: string;
   playerColor: Piece;
@@ -19,7 +19,6 @@ export type OnlineGameState = {
 }
 
 const initialState: OnlineGameState = {
-  playerId: '',
   playerName: 'Guest',
   roomName: '',
   playerColor: Piece.BLACK,
@@ -30,15 +29,12 @@ const initialState: OnlineGameState = {
   players: {
     [Piece.BLACK]: {
       name: 'Guest',
-      id: ''
     },
     [Piece.WHITE]: {
       name: '',
-      id: ''
     },
     [Piece.NONE]: {
       name: '',
-      id: ''
     },
   },
   isGameStarted: false,

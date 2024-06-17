@@ -8,7 +8,7 @@ export type PlayerData = {
 }
 
 type Player = {
-    id: string;
+    id: number;
     name: string;
 }
 

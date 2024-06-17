@@ -6,41 +6,29 @@ import { useNavigate } from "react-router-dom";
 import { Room } from '../../types';
 import { OnlineGameState, setBoardSize, setPlayers, setRoomName, setTimeControl } from '../../redux/slices/onlineGameSlice';
 import useGameState from '../../hooks/useGameState';
+import axios from 'axios';
 
 const RoomList = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { gameState } = useGameState();
-    const { playerName, playerId } = gameState as OnlineGameState;
-    const rooms = useSelector((state: any) => state.room.rooms);
+    const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
-    dispatch({ type: SocketAction.CONNECT, payload: playerName });
-    dispatch({ type: SocketAction.GET_ROOMS })
+    const getRooms = async () => {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rooms`);
+      if (response.status === 200) {
+        setRooms(response.data.rooms);
+      } else {
+        console.error('Error creating room', response.data.message);
+      }
+    }
+    getRooms();
   }, []);
   const handleCreateRoom = () => {
-    dispatch(setPlayers(
-      {
-        [Piece.BLACK]: {
-          name: playerName,
-          id: playerId
-        },
-        [Piece.WHITE]:{
-          name: '',
-          id: ''
-        },
-        [Piece.NONE]: {
-          name: '',
-          id: ''
-        },
-      }
-    ));
     navigate('/game/online');
   };
 
   const handleJoinRoom = (room: Room) => {
-    dispatch({ type: SocketAction.JOIN_ROOM, payload: {playerName, room: room.id} })
-    navigate('/game/online');
+    navigate(`/game/online/${room.id}`);
   }
 
   return (

@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import cors from 'cors';
 import { createClient } from 'redis';
+import roomRoutes from './routes/roomRoutes';
 
 const app = express();
 const server = http.createServer(app);
@@ -29,11 +30,9 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
+app.use('/room', roomRoutes);
 
-const redisClient = createClient();
-redisClient.connect();
-
-initializeSocket(redisClient, io);
+initializeSocket(io);
 
 const PORT = process.env.PORT || 3000;
 

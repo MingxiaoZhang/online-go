@@ -2,7 +2,7 @@ import { BoardSize, Piece, PlayerType, TimeControl } from "./enum"
 
 export type Player = {
     name: string;
-    id: string;
+    id?: number;
 }
 
 export type Room = {

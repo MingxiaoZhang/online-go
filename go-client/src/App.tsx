@@ -31,7 +31,7 @@ const App = () => {
             <AuthProvider>
               <Routes>
                 <Route path="/game/local" element={<LocalGamePage />} />
-                <Route path="/game/online" element={<MultiGamePage />} />
+                <Route path="/game/online/:id" element={<MultiGamePage />} />
                 <Route path="/rooms" element={<RoomList />} />
                 <Route path="/rules" element={<RulesPage />} />
                 <Route path='/login' element={<LoginPage />} />

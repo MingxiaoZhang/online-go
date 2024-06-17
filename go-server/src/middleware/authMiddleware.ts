@@ -5,6 +5,7 @@ import { AuthRequest } from '../types/types';
 import { Socket } from 'socket.io';
 import { RedisClientConnection } from '../redis/types';
 import { CONNECTED_IP_KEY } from '../const';
+import redisClient from '../redis/redisClient';
 
 const JWT_SECRET = process.env.JWT_SECRET || '';
 
@@ -28,7 +29,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   }
 };
 
-export const socketMiddleware = (redisClient: RedisClientConnection) => async (socket: Socket, next: (err?: Error) => void) => {
+export const socketMiddleware = async (socket: Socket, next: (err?: Error) => void) => {
   const token = socket.handshake.auth.token;
   const ip = socket.handshake.address;
 
