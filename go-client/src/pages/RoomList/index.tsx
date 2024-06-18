@@ -15,8 +15,9 @@ const RoomList = () => {
   useEffect(() => {
     const getRooms = async () => {
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rooms`);
+      console.log(response);
       if (response.status === 200) {
-        setRooms(response.data.rooms);
+        setRooms(response.data);
       } else {
         console.error('Error creating room', response.data.message);
       }
@@ -24,7 +25,7 @@ const RoomList = () => {
     getRooms();
   }, []);
   const handleCreateRoom = () => {
-    navigate('/game/online');
+    navigate('/game/online/');
   };
 
   const handleJoinRoom = (room: Room) => {

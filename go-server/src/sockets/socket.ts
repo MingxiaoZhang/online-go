@@ -61,13 +61,6 @@ export const initializeSocket = (io: Server) => {
     });
     socket.on('joinRoom', ({playerName, room}) => {
       socket.join(room);
-      if (roomData[room].players[Piece.BLACK].id !== '') {
-        roomData[room].players[Piece.WHITE].name = playerName;
-        roomData[room].players[Piece.WHITE].id = socket.id;
-      } else {
-        roomData[room].players[Piece.BLACK].name = playerName;
-        roomData[room].players[Piece.BLACK].id = socket.id;
-      }
       playerData[playerName].room = room;
       roomData[room].isStarted = true;
       io.to(room).emit('roomOptions', roomData[room]);

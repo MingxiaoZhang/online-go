@@ -3,7 +3,6 @@ import { Action, Middleware } from '@reduxjs/toolkit';
 import { io, Socket } from 'socket.io-client';
 import { SocketAction } from '../../enum';
 import { resetBoard, setRoomName, setTimeControl, setPlayers, startGame, updateBoard, setBoardSize, setPlayerID, setIsCreated } from '../slices/onlineGameSlice';
-import { setRooms } from '../slices/roomSlice';
 import { Room } from '../../types';
 
 interface PayloadAction<T = string, P = any> extends Action<string> {
@@ -22,9 +21,6 @@ const socketMiddleware: (socket: Socket) => Middleware = (socket: Socket) => ({ 
       socket.on('start', () => {
         dispatch(startGame(undefined));
       });
-      socket.on('rooms', (data) => {
-        dispatch(setRooms(data.rooms));
-      })
       socket.on('roomOptions', (data: Room) => {
         console.log(data);
         if (data.isStarted) {

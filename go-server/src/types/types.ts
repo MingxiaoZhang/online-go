@@ -14,6 +14,7 @@ type Player = {
 
 export type RoomData = {
     id: string;
+    creatorId: number;
     roomName: string;
     boardSize: keyof typeof BoardSize;
     timeControl: keyof typeof TimeControl;

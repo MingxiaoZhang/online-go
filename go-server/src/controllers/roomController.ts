@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getRoomData, saveRoomData } from '../redis/roomService';
+import { getAllRoomData, getRoomData, saveRoomData } from '../redis/roomService';
 import { AuthRequest, RoomData } from '../types/types';
 import { v4 as uuidv4 } from 'uuid';
 import { Piece } from '../enum';
@@ -17,8 +17,9 @@ const generateUniqueRoomId = async (): Promise<string> => {
     return uniqueId;
   };
   
-export const createRoom = async (req: Request, res: Response) => {
+export const createRoom = async (req: AuthRequest, res: Response) => {
     const { playerName, roomName, boardSize, timeControl, players } = req.body;
+    const userId = req.userId;
 
     if (!playerName || !roomName || !boardSize || !timeControl || !players) {
         return res.status(400).send('Missing required room data');
@@ -28,6 +29,7 @@ export const createRoom = async (req: Request, res: Response) => {
         const id = await generateUniqueRoomId();
         const newRoomData: RoomData = {
             id,
+            creatorId: userId || 0,
             roomName,
             boardSize,
             timeControl,
@@ -46,13 +48,13 @@ export const joinRoom = async (req: AuthRequest, res: Response) => {
     const userId = req.userId;
 
     if (!userId || !playerName || !roomId) {
-        return res.status(400).send('Missing required room data');
+        return res.status(400).json({message: 'Missing required room data'});
     }
 
     try {
         const roomData = await getRoomData(roomId);
         if (!roomData) {
-            return res.status(400).send('Room not found');
+            return res.status(400).json({message: 'Room not found'});
         }
         if (roomData.players[Piece.BLACK].id) {
             roomData.players[Piece.WHITE].name = playerName;
@@ -61,8 +63,17 @@ export const joinRoom = async (req: AuthRequest, res: Response) => {
             roomData.players[Piece.BLACK].name = playerName;
             roomData.players[Piece.BLACK].id = userId;
           }
-        res.status(201).json({id});
+        res.status(201);
     } catch (error) {
         res.status(500).json({message: 'Error saving room data to Redis'});
     }
 };
+
+export const getRooms = async (req: Request, res: Response) => {
+    try {
+        const roomList = await getAllRoomData();
+        res.status(200).json(Object.values(roomList));
+    } catch (error) {
+        res.status(500).json({message: 'Error fetching room list from Redis'});
+    }
+}

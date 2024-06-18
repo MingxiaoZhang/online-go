@@ -6,7 +6,6 @@ import { initializeSocket } from './sockets/socket';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import cors from 'cors';
-import { createClient } from 'redis';
 import roomRoutes from './routes/roomRoutes';
 
 const app = express();
@@ -30,7 +29,7 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
-app.use('/room', roomRoutes);
+app.use('/rooms', roomRoutes);
 
 initializeSocket(io);
 
