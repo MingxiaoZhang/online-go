@@ -7,6 +7,7 @@ import { Player } from '../../types';
 export type OnlineGameState = {
   playerId?: number;
   playerName: string;
+  roomId?: number;
   roomName: string;
   playerColor: Piece;
   board: Piece[][];
@@ -19,7 +20,7 @@ export type OnlineGameState = {
 }
 
 const initialState: OnlineGameState = {
-  playerName: 'Guest',
+  playerName: 'Guest', 
   roomName: '',
   playerColor: Piece.BLACK,
   board: [],
@@ -46,7 +47,8 @@ const onlineGameSlice = createSlice({
   initialState,
   reducers: {
     setIsCreated: (state, action) => {
-      state.isCreated = action.payload;
+      state.isCreated = action.payload.isCreated;
+      state.roomId = action.payload.roomId;
     },
     startGame: (state, action?) => {
       state.isGameStarted = true;

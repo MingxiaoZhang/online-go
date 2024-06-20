@@ -29,7 +29,7 @@ const MultiGamePage = () => {
           playerName
         };
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/rooms/edit`, settings);
-        if (response.status !== 200) {
+        if (response.status !== 201) {
           console.error('Error editing room', response.data.message);
         }
       }
@@ -47,9 +47,9 @@ const MultiGamePage = () => {
         players
       };
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/rooms/create`, settings);
-      if (response.status === 200) {
-        dispatch(setIsCreated(true));
-        navigate(`${location.pathname}/${response.data.roomId}`, { replace: true });
+      if (response.status === 201) {
+        dispatch(setIsCreated({isCreated: true, roomId: response.data.roomId}));
+        navigate(`${location.pathname}${response.data.roomId}`, { replace: true });
       } else {
         console.error('Error creating room', response.data.message);
       }

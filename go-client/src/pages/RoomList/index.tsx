@@ -4,22 +4,34 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Piece, PlayerType, SocketAction } from '../../enum';
 import { useNavigate } from "react-router-dom";
 import { Room } from '../../types';
-import { OnlineGameState, setBoardSize, setPlayers, setRoomName, setTimeControl } from '../../redux/slices/onlineGameSlice';
+import { OnlineGameState, setBoardSize, setIsCreated, setPlayers, setRoomName, setTimeControl } from '../../redux/slices/onlineGameSlice';
 import useGameState from '../../hooks/useGameState';
 import axios from 'axios';
 
 const RoomList = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [rooms, setRooms] = useState<Room[]>([]);
+    const { gameState } = useGameState();
+    const { roomId, isCreated } = gameState as OnlineGameState;
 
   useEffect(() => {
     const getRooms = async () => {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rooms`);
-      console.log(response);
-      if (response.status === 200) {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rooms`);
         setRooms(response.data);
-      } else {
-        console.error('Error creating room', response.data.message);
+      } catch(error) {
+        if (!axios.isAxiosError(error)) {
+          return
+        }
+        if (error.response?.status === 303) {
+          const roomId = (error.response.data as {roomId: number}).roomId;
+          console.log(`/game/online/${roomId}`);
+          dispatch(setIsCreated({isCreated: true, roomId: roomId}))
+          navigate(`/game/online/${roomId}`);
+        } else {
+          console.error('Error creating room', error.response);
+        }
       }
     }
     getRooms();

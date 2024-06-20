@@ -1,8 +1,7 @@
 // roomService.ts
 import redisClient from './redisClient';
 import { RoomData } from '../types/types';
-
-const ROOM_DATA_KEY = 'roomData';
+import { ROOM_DATA_KEY, USER_ROOM_KEY } from './const';
 
 export const saveRoomData = async (roomId: string, roomData: RoomData): Promise<void> => {
   const roomDataJSON = JSON.stringify(roomData);
@@ -26,3 +25,12 @@ export const getAllRoomData = async (): Promise<{[roomId: string]: RoomData}> =>
 export const deleteRoomData = async (roomId: string): Promise<void> => {
   await redisClient.hDel(ROOM_DATA_KEY, roomId);
 };
+
+export const saveUserRoom = async (userId: string, roomId: string): Promise<void> => {
+  await redisClient.hSet(USER_ROOM_KEY, userId, roomId);
+}
+
+export const getUserRoom = async (userId: string): Promise<string | undefined> => {
+  const roomId = await redisClient.hGet(USER_ROOM_KEY, userId);
+  return roomId;
+}

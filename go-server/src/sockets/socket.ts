@@ -28,34 +28,6 @@ export const initializeSocket = (io: Server) => {
       socket.emit('setId', socket.id);
     })
 
-    socket.on('createRoom', ({playerName, roomName, boardSize, timeControl, players}) => {
-      socket.join(String(roomNumber));
-      roomData[String(roomNumber)] = {
-        id: String(roomNumber),
-        roomName,
-        boardSize,
-        timeControl,
-        players,
-        isStarted: false
-      };
-      playerData[playerName].room = String(roomNumber);
-      socket.broadcast.emit('rooms', { rooms: Object.values(roomData) });
-      roomNumber += 1;
-    });
-    socket.on('editRoom', ({playerName, roomName, boardSize, timeControl, players}) => {
-      const room = playerData[playerName]?.room || '';
-      roomData[room] = {
-        id: room,
-        roomName,
-        boardSize,
-        timeControl,
-        players,
-        isStarted: false
-      };
-      console.log(socket.id, roomData[room]);
-      socket.broadcast.to(room).emit('roomOptions', roomData[room]);
-    });
-
     socket.on('getRooms', () => {
       socket.emit('rooms', { rooms: Object.values(roomData) });
     });

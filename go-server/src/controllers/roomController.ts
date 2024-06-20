@@ -1,21 +1,9 @@
 import { Request, Response } from 'express';
-import { getAllRoomData, getRoomData, saveRoomData } from '../redis/roomService';
+import { getAllRoomData, getRoomData, getUserRoom, saveRoomData, saveUserRoom } from '../redis/roomService';
 import { AuthRequest, RoomData } from '../types/types';
 import { v4 as uuidv4 } from 'uuid';
 import { Piece } from '../enum';
-
-const generateUniqueRoomId = async (): Promise<string> => {
-    let uniqueId: string;
-    let isUnique: boolean = false;
-  
-    do {
-      uniqueId = uuidv4();
-      const existingRoom = await getRoomData(uniqueId);
-      isUnique = existingRoom === null;
-    } while (!isUnique);
-  
-    return uniqueId;
-  };
+import redisClient from '../redis/redisClient';
   
 export const createRoom = async (req: AuthRequest, res: Response) => {
     const { playerName, roomName, boardSize, timeControl, players } = req.body;
@@ -26,7 +14,7 @@ export const createRoom = async (req: AuthRequest, res: Response) => {
     }
 
     try {
-        const id = await generateUniqueRoomId();
+        const id = await redisClient.incr('roomIdCounter');
         const newRoomData: RoomData = {
             id,
             creatorId: userId || 0,
@@ -36,8 +24,10 @@ export const createRoom = async (req: AuthRequest, res: Response) => {
             players,
             isStarted: false
         };
-        await saveRoomData(id, newRoomData);
-        res.status(201).json({id});
+        console.log(newRoomData);
+        await saveRoomData(String(id), newRoomData);
+        await saveUserRoom(String(userId), String(id));
+        res.status(201).json({roomId: id});
     } catch (error) {
         res.status(500).json({message: 'Error saving room data to Redis'});
     }
@@ -69,10 +59,38 @@ export const joinRoom = async (req: AuthRequest, res: Response) => {
     }
 };
 
-export const getRooms = async (req: Request, res: Response) => {
+export const getRooms = async (req: AuthRequest, res: Response) => {
+    const userId = req.userId;
+    const roomId = await getUserRoom(String(userId));
+    if (roomId) {
+        return res.status(303).json({roomId});
+    }
+
     try {
         const roomList = await getAllRoomData();
         res.status(200).json(Object.values(roomList));
+    } catch (error) {
+        res.status(500).json({message: 'Error fetching room list from Redis'});
+    }
+}
+
+export const getRoomById = async (req: AuthRequest, res: Response) => {
+    const userId = req.userId;
+
+    if (!userId) {
+        return res.status(400).json({message: 'Error in user connection'});
+    }
+
+    try {
+        const roomData = await getRoomData(req.body.roomId);
+        const players = roomData?.players;
+        if (!players) {
+            return res.status(500).json({message: 'Error in request data'});
+        }
+        if (players[Piece.BLACK].id !== userId && players[Piece.WHITE].id !== userId) {
+            return res.status(500).json({message: 'Unauthorized access to game data'});
+        } 
+        res.status(200).json(roomData);
     } catch (error) {
         res.status(500).json({message: 'Error fetching room list from Redis'});
     }

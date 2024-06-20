@@ -6,6 +6,7 @@ import { Socket } from 'socket.io';
 import { RedisClientConnection } from '../redis/types';
 import { CONNECTED_IP_KEY } from '../const';
 import redisClient from '../redis/redisClient';
+import ip from 'ip';
 
 const JWT_SECRET = process.env.JWT_SECRET || '';
 
@@ -17,6 +18,28 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).json({ error: 'Authorization header required' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    req.userId = payload.userId;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Invalid token' });
+  }
+};
+
+export const userMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  if (!req.ip) {
+    return res.status(400).json({ error: 'Invalid connection' });
+  }
+  if (!authHeader) {
+    console.log(req.ip);
+    req.userId = ip.toLong(req.ip);
+    next();
+    return
   }
 
   const token = authHeader.split(' ')[1];

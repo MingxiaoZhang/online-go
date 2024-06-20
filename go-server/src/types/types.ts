@@ -13,7 +13,7 @@ type Player = {
 }
 
 export type RoomData = {
-    id: string;
+    id: number;
     creatorId: number;
     roomName: string;
     boardSize: keyof typeof BoardSize;

@@ -21,13 +21,6 @@ const socketMiddleware: (socket: Socket) => Middleware = (socket: Socket) => ({ 
       socket.on('start', () => {
         dispatch(startGame(undefined));
       });
-      socket.on('roomOptions', (data: Room) => {
-        console.log(data);
-        if (data.isStarted) {
-          dispatch(startGame(data));
-        }
-      })
-      socket.emit('initPlayer', (action as PayloadAction).payload);
       break;
 
     case SocketAction.CREATE_ROOM:
